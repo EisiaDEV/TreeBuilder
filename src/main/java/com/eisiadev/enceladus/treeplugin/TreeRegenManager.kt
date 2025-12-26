@@ -2,16 +2,13 @@ package com.eisiadev.enceladus.treeplugin
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.*
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Block
-import org.bukkit.block.data.BlockData
 import org.bukkit.scheduler.BukkitTask
-import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import java.util.concurrent.CopyOnWriteArrayList
 
 data class SavedBlockData(
     val x: Int,
@@ -29,7 +26,7 @@ data class RegenTask(
 
 class TreeRegenManager(private val plugin: TreePlugin) {
 
-    private val regenQueue = mutableListOf<RegenTask>()
+    private val regenQueue = CopyOnWriteArrayList<RegenTask>()
     private var regenTaskId: BukkitTask? = null
     private val gson = Gson()
 
@@ -57,7 +54,7 @@ class TreeRegenManager(private val plugin: TreePlugin) {
                     blockDataString
                 )
             )
-            block.type = Material.BARRIER
+            block.type = Material.DEAD_FIRE_CORAL_BLOCK
         }
 
         // 리젠 큐에 추가
@@ -99,7 +96,7 @@ class TreeRegenManager(private val plugin: TreePlugin) {
             val world = Bukkit.getWorld(blockData.world) ?: continue
             val block = world.getBlockAt(blockData.x, blockData.y, blockData.z)
 
-            if (block.type == Material.BARRIER) {
+            if (block.type == Material.DEAD_FIRE_CORAL_BLOCK) {
                 try {
                     // String을 BlockData로 복원 (방향 정보 포함)
                     val restoredBlockData = Bukkit.createBlockData(blockData.blockDataString)

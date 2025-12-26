@@ -6,6 +6,7 @@ import java.io.File
 class TreePlugin : JavaPlugin() {
     lateinit var regenManager: TreeRegenManager
     lateinit var dataFile: File
+    lateinit var listener: TreeBreakListener
 
     override fun onEnable() {
         // 데이터 폴더 생성
@@ -25,10 +26,13 @@ class TreePlugin : JavaPlugin() {
         regenManager.loadRegenQueue()
 
         logger.info("TreePlugin enabled!")
+
+        listener = TreeBreakListener(this) // 변수에 저장
+        server.pluginManager.registerEvents(listener, this)
     }
 
     override fun onDisable() {
-        // 리젠 큐 저장
+        listener.shutdown()
         regenManager.saveRegenQueue()
         logger.info("TreePlugin disabled!")
     }

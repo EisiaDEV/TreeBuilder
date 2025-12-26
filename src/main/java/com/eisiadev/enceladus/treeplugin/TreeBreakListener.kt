@@ -13,6 +13,10 @@ class TreeBreakListener(private val plugin: TreePlugin) : Listener {
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
+    fun shutdown() {
+        scope.cancel()
+    }
+
     // 모든 원목, 목재, 껍질 벗긴 원목
     private val woodTypes = setOf(
         // 원목
